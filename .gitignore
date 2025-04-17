@@ -137,6 +137,8 @@ $RECYCLE.BIN/
 
 ### Gradle ###
 .gradle
+gradlew
+gradlew.bat
 /build/
 
 # Ignore Gradle GUI config
