@@ -40,9 +40,8 @@ public class Robot extends TimedRobot {
     private boolean isAlgRunning = false;
     private double algStartTime = 0.0;
 
-    // public double getElevatorHeight(){
-    //     return 2 * elevatorEncoder.get() * constants.ELEVATOR_RADIUS * Math.PI; 
-    // }
+    private final double TURN_DEADZONE = 0.15; // Analog çubuğu hassasiyeti
+    private final double TURN_SPEED = 0.6; // Dönüş hızı
 
     @Override
     public void robotInit() {
@@ -115,25 +114,29 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
-        // Get Limelight values using LimelightHelpers
+        // Sürüş kontrolleri
+        double y = controller.getRawAxis(1); // Y ekseni (ileri/geri)
+        double x = -controller.getRawAxis(0); // X ekseni (sol/sağ kayma)
+        double z = controller.getRawAxis(2); // 360 derece dönüş artık axis 2'de
 
-        // SmartDashboard Debugging
-
-        // Default joystick controls
-        double y = controller.getRawAxis(1); // Y ekseni
-        double x = -controller.getRawAxis(0); // X ekseni (sol/sağ kayma) -- TERS ÇEVRİLDİ
-        double z = controller.getRawAxis(4); // Sağ analog X ekseni (dönüş)
+        // Deadzone uygula (isteğe bağlı)
+        y = applyDeadzone(y);
+        x = applyDeadzone(x);
+        z = applyDeadzone(z);
 
         mecanumDrive.driveCartesian(y, x, z);
 
-        // Test için:
-        // driveTrain.testAllMotors(0.5); // Tüm motorlar aynı anda dönmeli
-
-        // // **Elevator Control (PWM 6)**
-        double lt = controller.getRawAxis(constants.LEFT_TRIGGER);
-        double rt = controller.getRawAxis(constants.RIGHT_TRIGGER);
-        // double elevatorSpeed = getElevatorHeight() <= constants.ELEVATOR_MAX_HEIGHT? rt - lt : -lt;
-        double elevatorSpeed = rt - lt;
+        // Asansör kontrolü SADECE LT ve RT ile yapılır
+        double lt = controller.getRawAxis(constants.LEFT_TRIGGER);  // LT: aşağı
+        double rt = controller.getRawAxis(constants.RIGHT_TRIGGER); // RT: yukarı
+        double elevatorSpeed = 0;
+        if (rt > 0.1) {
+            elevatorSpeed = rt; // yukarı
+        } else if (lt > 0.1) {
+            elevatorSpeed = -lt; // aşağı
+        } else {
+            elevatorSpeed = 0;
+        }
         elevatorMotor.set(elevatorSpeed);
         SmartDashboard.putNumber("Elevator Speed", elevatorSpeed);
 
