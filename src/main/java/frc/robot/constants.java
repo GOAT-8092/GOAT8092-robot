@@ -8,10 +8,10 @@ public class constants {
     public static final int BUTTON_B = 2;
     public static final int BUTTON_X = 3;
     public static final int BUTTON_Y = 4;
-    public static final int LEFT_BUTTON = 5;
-    public static final int RIGHT_BUTTON = 6;
-    public static final int JOYSTICK_SELECT = 7;
-    public static final int JOYSTICK_START = 8;
+    public static final int LB = 5;
+    public static final int RB = 6;
+    public static final int LT = 7;
+    public static final int RT = 8;
     public static final int LEFT_STICK_BUTTON = 9;
     public static final int RIGHT_STICK_BUTTON = 10;
     

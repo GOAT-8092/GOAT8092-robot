@@ -141,8 +141,8 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("Elevator Speed", elevatorSpeed);
 
         // Coral System
-        boolean lb = controller.getRawButton(constants.LEFT_BUTTON);
-        boolean rb = controller.getRawButton(constants.RIGHT_BUTTON);
+        boolean lb = controller.getRawButton(constants.LB);
+        boolean rb = controller.getRawButton(constants.RB);
         double coralSpeed = 0.0;
         if (rb) {
             coralSpeed = constants.CORAL_SPEED_LIMIT;
