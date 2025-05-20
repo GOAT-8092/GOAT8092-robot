@@ -5,20 +5,21 @@ public class Sabitler {
 
     // ------------------ Joystick Ayarları ------------------
     // Joystick portu
-    public static final int JOYSTICK_PORT = 2;
+    public static final int JOYSTICK_PORT = 1;
 
 
     // Butonlar (Logitech F310 için)
-    public static final int BUTON_A = 3; // A tuşu
-    public static final int BUTON_B = 2; // B tuşu
-    public static final int BUTON_X = 4; // X tuşu
-    public static final int BUTON_Y = 1; // Y tuşu
+    public static final int BUTON_A = 2; // A tuşu
+    public static final int BUTON_B = 3; // B tuşu
+    public static final int BUTON_X = 1; // X tuşu
+    public static final int BUTON_Y = 4; // Y tuşu
     public static final int SOL_TAMPON = 5;   // LB (Sol bumper)
     public static final int SAG_TAMPON = 6;   // RB (Sağ bumper)
     public static final int SOL_ANALOG_TUS = 9;  // Sol analog stick tuşu
     public static final int SAG_ANALOG_TUS = 10; // Sağ analog stick tuşu
     public static final int LT_BUTON = 7; // LT buton portu
     public static final int RT_BUTON = 8; // RT buton portu
+    public static final int START_BUTON = 9; // Start düğmesi
 
     // Analog eksenler (Logitech F310 için)
     public static final int SOL_X_EKSEN = 0;   // Sol analog X (sağ -1, sol 1)
