@@ -185,4 +185,109 @@ Yaygın sorunlar ve çözümleri:
    - Uygun aydınlatma sağlayın (çok parlak veya çok karanlık olmamalı)
    - Etiketlerin doğru ailede olduğunu doğrulayın (TagStandard52h13)
    - Etiket boyutu ve mesafesinin algılama aralığında olduğunu kontrol edin
-   - Etiketlerin hasar görmediğinden veya kısmen engellenmediğinden emin olun 
+   - Etiketlerin hasar görmediğinden veya kısmen engellenmediğinden emin olun
+
+## Kontrolcü Düğme Kılavuzu
+
+Xbox kontrolcüsü, robotun işlevlerini kontrol etmek için kullanılır. İşte düğme yapılandırması:
+
+### Ana Sürüş Kontrolleri
+- **Sol Çubuk**: İleri/geri hareket (Y ekseni) ve sola/sağa kayma (X ekseni)
+- **Sağ Çubuk**: Robotun dönüşü (X ekseni)
+- **Sol ve Sağ Tetikler**: Hız kontrolü (daha sert basış = daha hızlı hareket)
+
+### Mod Düğmeleri
+- **Y Düğmesi**: Görüş takip modunu aç/kapat
+  - LED'ler otomatik olarak açılır
+  - Robot algılanan hedeflere doğru otomatik olarak hizalanır
+  - Hedef algılandığında kontrolcü titreşim verir
+  
+- **X Düğmesi**: AprilTag modunu aç/kapat
+  - Limelight, AprilTag pipeline'ına geçiş yapar
+  - Şu anki AprilTag kimliği ve mesafesi SmartDashboard'da gösterilir
+  - Bu, A düğmesi ile etiket tepkilerini tetiklemek için gereklidir
+
+### AprilTag Düğmeleri
+- **A Düğmesi**: AprilTag tepkisini tetikle
+  - Robot, algılanan etikete (veya SmartDashboard'da seçilen etikete) tepki verir
+  - Mavi etiketler: 1.0 metreye sürüş
+  - Kırmızı etiketler: 1.5 metreye sürüş
+  - Sahne etiketleri: Sadece dönüşsel hizalama
+  
+- **B Düğmesi**: Etkin AprilTag tepkisini durdur
+  - Mevcut etiket tepkisini herhangi bir anda iptal eder
+  - Robot normal kontrolcü girişlerini kabul etmeye geri döner
+
+### Diğer Kontroller
+- **Tampon Düğmeleri (Bumpers)**: 
+  - **Sol Tampon**: İnce ayar modu (daha hassas kontroller)
+  - **Sağ Tampon**: Hızlı mod (daha hızlı hareket)
+
+- **Back/Select Düğmesi**: Limelight LED'leri aç/kapat
+- **Start Düğmesi**: Mevcut robotik durum verilerini yeniden başlat
+
+- **POV Pad (D-Pad)**:
+  - **Yukarı/Aşağı**: İkincil aktüatör kontrolü
+  - **Sol/Sağ**: İlave fonksiyonlar için ayarlanabilir
+
+### SmartDashboard Etkileşimi
+Kontrolcü ile birlikte, SmartDashboard'daki "Target Tag" açılır menüsünü kullanarak belirli etiket kimliklerini hedefleyebilirsiniz. Bu, A düğmesi ile tepki tetiklendiğinde mevcut görünür etiketlere bakılmaksızın robotun belirli bir etikete tepki vermesini sağlar.
+
+## Simülasyon ve Test
+
+Robot fiziksel olarak mevcut olmadığında bile geliştirme ve test yapabilmeniz için birkaç seçenek bulunmaktadır:
+
+### WPILib Simülasyon Araçları
+
+WPILib, kod geliştirme ve test için güçlü simülasyon araçları sunar:
+
+1. **Robot Simülatörü**:
+   - WPILib'in entegre robot simülatörü, kodunuzu fiziksel robot olmadan test etmenizi sağlar
+   - Komut `./gradlew simulateJava` ile simülatör başlatılabilir
+   - Joystick girişleri ve motor çıkışları sanal olarak izlenebilir
+
+2. **Görselleştirme Araçları**:
+   - Robot sürücü istasyonu (Driver Station) simülatörü, kontrolcü girişlerini taklit etmenizi sağlar
+   - Field2d widget, robotun saha üzerindeki simüle edilmiş konumunu görselleştirir
+   - SmartDashboard, gerçek robotta olduğu gibi telemetri verileri görüntüler
+
+### Limelight Simülasyonu
+
+Limelight kamerasını simüle etmek için:
+
+1. **PhotonVision Simülasyonu**:
+   - PhotonVision, Limelight benzeri görüş fonksiyonlarını simüle etmek için kullanılabilir
+   - Sanal AprilTag görüntüleri oluşturabilir ve bu etiketleri algılamanızı simüle edebilir
+   - GitHub: [https://github.com/PhotonVision/photonvision](https://github.com/PhotonVision/photonvision)
+
+2. **LLSimulator Tool**:
+   - Limelight resmi simülasyon aracı, NetworkTables üzerinden gerçek Limelight davranışını taklit eder
+   - Yapılandırması: [https://docs.limelightvision.io/en/latest/simulator_config.html](https://docs.limelightvision.io/en/latest/simulator_config.html)
+   - Python3 ile çalıştırılabilir
+
+### Simülasyondan Gerçek Robota Geçiş
+
+Simülasyonda kodunuzu test ettikten sonra, gerçek robota geçerken şunlara dikkat edin:
+
+1. **NetworkTables Yapılandırması**:
+   - Simülasyon ortamında genellikle "localhost" kullanılırken, gerçek robotta IP adresi gereklidir
+   - `NetworkTableInstance.getDefault().setServerTeam(8092);` robot kodunuzda olduğundan emin olun
+
+2. **Fiziksel Kalibrasyonlar**:
+   - Simülasyonda test edilmiş PID değerleri, gerçek robotta ince ayar gerektirebilir
+   - Kamera montaj açıları ve yüksekliği gerçek robotla eşleşmelidir
+
+3. **Test Modu**:
+   - Tam otonom modlarını test etmeden önce, test modunda tek bileşenleri kontrol edin
+   - `./gradlew testJava` ile birim testlerini çalıştırın
+
+### Simülasyon Ortamını Kurma
+
+Simülasyon ortamını kurmak için:
+
+1. WPILib VSCode uzantısını yükleyin
+2. WPILib örnek simülasyon projelerini referans alın
+3. NetworkTables ve SmartDashboard'ın doğru çalıştığını kontrol edin
+4. `src/main/java/frc/robot/simulation` klasörü altında simülasyon özel kodları oluşturun
+
+Bu simülasyon araçları, gerçek robota erişmeden bile görüş sisteminizi geliştirmeye ve test etmeye devam etmenizi sağlar. 

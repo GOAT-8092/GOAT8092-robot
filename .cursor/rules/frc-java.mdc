@@ -1,0 +1,249 @@
+---
+description: Enforce FRC Java coding standards and practices
+globs: src/main/java/frc/robot/**/*.java
+alwaysApply: false
+---
+# FRC Java Kodlama Standartları ve En İyi Uygulamalar - GOAT8092
+
+## Giriş
+Bu belge, GOAT8092 FRC robot takımı için Java kodlama standartlarını içerir. Standartlar, robotun okunabilirliğini, bakımını ve hatalardan arındırılmasını kolaylaştırmak için tasarlanmıştır.
+
+## GOAT8092 Projesinin Yapısı
+
+### Mevcut Paket Organizasyonu
+- `frc.robot`: Ana robot sınıfı ve diğer bileşenler (Sabitler, Limelight, vb.)
+
+### Önerilen Genişletilmiş Paketler
+Mevcut kodu yeniden düzenlemek gerekirse, aşağıdaki yapı önerilir:
+- `frc.robot`: Ana robot sınıfı ve üst düzey bileşenler
+- `frc.robot.subsystems`: Alt sistemler (sürüş, asansör, mercan, alg, vb.)
+- `frc.robot.utils`: Yardımcı sınıflar (Limelight, vb.)
+- `frc.robot.constants`: Sabitler ve konfigürasyon değerleri
+
+### Dosya İsimlendirme
+- Her Java sınıfı kendi dosyasında olmalıdır
+- Sınıf adları tam olarak dosya adlarıyla eşleşmelidir
+- Türkçe sınıf adları da kullanılabilir, ancak tutarlı olunmalıdır
+
+## Kodlama Kuralları
+
+### İsimlendirme Kuralları
+- **Türkçe ve İngilizce**: 
+  - Türkçe yorumlar zorunludur
+  - Türkçe değişken adları kullanılabilir (mevcut yapıyı takip edin)
+  - Türkçe metod adları kullanılabilir
+  
+- **CamelCase Kullanımı**:
+  - Sınıflar için PascalCase: `Limelight`, `Robot`
+  - Metodlar ve değişkenler için camelCase: `robotInit()`, `isAlgRunning`
+  - Sabitler için UPPER_SNAKE_CASE: `BUTON_A`, `ON_SOL_MOTOR_PORT`
+
+- **Sabitler Dosyası**:
+  - Tüm sabitler `Sabitler.java` içinde gruplanmalıdır
+  - Benzer sabitler gruplanmalı ve yorumlarla bölünmelidir
+
+### Türkçe Karakter Kullanımı
+- Yorumlarda Türkçe karakterler kullanılabilir (ç, ğ, ı, ö, ş, ü)
+- Değişken/metod/sınıf isimlerinde Türkçe karakterler yerine ASCII eşdeğerlerini kullanın:
+  - 'ç' yerine 'c', 'ğ' yerine 'g', 'ı' yerine 'i', 'ö' yerine 'o', 'ş' yerine 's', 'ü' yerine 'u'
+
+## Yorum Kuralları
+
+### Yorum Stili
+- Her sınıf başına kapsamlı yorum ekleyin
+- Her metod için Javadoc yorum ekleyin
+- Her değişken grubu için açıklayıcı yorumlar ekleyin
+- Karmaşık kod blokları için satır içi yorumlar ekleyin
+- Örnek:
+
+```java
+/**
+ * Bu metod, robotun belirli bir AprilTag'e yaklaşmasını sağlar.
+ *
+ * @param mecanumDrive Sürüş sistemi
+ * @param targetDistance Hedef mesafe (metre cinsinden)
+ * @return Robot hizalandı ve hedef mesafeye ulaştıysa true
+ */
+public static boolean driveToAprilTag(MecanumDrive mecanumDrive, double targetDistance) {
+    // İşlem kodları...
+}
+```
+
+### Mevcut Belgelendirme Stili
+Robot.java ve Limelight.java dosyalarındaki mevcut yorum ve belgelendirme stilini takip edin:
+- Bölüm başlıklarını `// ---- BÖLÜM ADI ----` formatında yazın
+- Satır içi yorumları `// Açıklama` formatında yazın
+- Çok satırlı yorumları `/* Açıklama */` formatında yazın
+
+## Alt Sistemler ve Donanım Yönetimi
+
+### Mecanum Sürüş
+- `mecanumDrive` nesnesi Robot sınıfında tanımlanır
+- driveCartesian kullanarak tüm yönlere hareket sağlanır:
+  - İlk parametre: ileri/geri (-1.0 ila 1.0)
+  - İkinci parametre: sola/sağa (-1.0 ila 1.0)
+  - Üçüncü parametre: dönüş (-1.0 ila 1.0)
+
+### Asansör Kontrolü
+- `elevatorMotor` ile asansör kontrolü
+- LT ve RT tetikleyicileri ile yukarı/aşağı hareket
+
+### Mercan Sistemi
+- `coralMotor` ile mercan sisteminin kontrolü
+- Tampon düğmeleri (bumpers) ile ileri/geri hareket
+
+### Alg Tekeri Sistemi
+- `algMotorLeft` ve `algMotorRight` ile yosun toplama kontrolü
+- A/B düğmeleri ile ileri/geri hareket ve otomatik durdurma
+
+## Vision ve AprilTag Entegrasyonu
+
+### Limelight Sınıfı
+Limelight sınıfı, vision işleme ve AprilTag algılama için merkezi bir yapı sağlar:
+
+- **Pipeline Yapılandırması**:
+  - `PIPELINE_DEFAULT (0)`: Sürücü kamerası modu
+  - `PIPELINE_APRILTAG (1)`: AprilTag algılama modu
+  - `PIPELINE_RETROREFLECTIVE (2)`: Reflektif bant izleme modu
+
+- **PID Kontrolörleri**:
+  - `rotationPID`: Dönüş hareketleri için
+  - `strafePID`: Yanal hareket için
+  - `distancePID`: Mesafe kontrolü için
+
+- **Veri Filtreleme**:
+  - MedianFilter sınıfı ile gürültü azaltma
+  - Ham kamera verilerine filtre uygulama
+
+- **AprilTag İşleme**:
+  - Etiket türleri için sabitler (mavi, kırmızı, sahne etiketleri)
+  - İşlevsel gruplandırma (isBlueTag, isRedTag, isStageTag)
+  - Etiket mesafe ve açı hesaplamaları
+  - Etiket yanıt davranışları
+
+### AprilTag İşleme İlkeleri
+AprilTag işleme için aşağıdaki ilkeleri uygulayın:
+
+- Algılanan bir AprilTag'in "güncelliğini" kontrol edin
+- Çeşitli etiket türleri için farklı davranışlar tanımlayın
+- Belirli etiketleri hedeflemek için ek kontroller sağlayın
+- Etiket algılamasını filtrelemek için minimum güven değeri ayarlayın
+
+### Otonom Davranış
+Otonom davranışı zaman tabanlı aşamalara ayırın:
+
+1. **Aşama 1**: AprilTag tarama (2 saniye)
+2. **Aşama 2**: Algılanan AprilTag'e tepki (3 saniye)
+3. **Aşama 3**: Son hareket ve tamamlama
+
+## SmartDashboard Entegrasyonu
+
+### Değerlerin Görüntülenmesi
+- Sensör değerlerini (açı, yaw, roll) görüntüleyin
+- Vision durumunu ve hedef bilgilerini görüntüleyin
+- Çalışma modlarını (görüş takibi, AprilTag modu) görüntüleyin
+- Robot pozisyonunu (x, y, yön) görüntüleyin
+
+### Değerlerin Okunması
+- Kullanıcı seçimlerini (etiket seçicisi) SmartDashboard'dan okuyun
+- Robot durumunu (tepki yürütülüyor, hedef etiket) güncelleyin
+
+## Ölü Bölge ve Filtreler
+
+### Joystick Ölü Bölgesi
+- `applyDeadzone()` metodunu kullanarak küçük joystick hareketlerini filtreleme
+- Joystick değerlerini simetrik olarak filtreleme
+
+### Sensör Filtreleme
+- MedianFilter sınıfını kullanarak sensör değerlerini filtreleme
+- Belirli bir pencere boyutu ile gürültüleri azaltma
+
+## Görüş Destekli Sürüş Teknikleri
+
+### Temel Görüş Destekli Sürüş
+- Basit hizalama için `limelightDrive()` metodunu kullanın
+
+### Gelişmiş Görüş Destekli Sürüş
+- PID tabanlı hassas kontrol için `targetTrackingDrive()` metodunu kullanın
+- Hedef arama ve otomatik hizalama için `seekTarget` parametresini kullanın
+
+### AprilTag Tepkileri
+- Etiket türüne göre farklı davranışlar için `executeAprilTagResponse()` metodunu kullanın
+- Etiket mesafesi kontrolü için `driveToAprilTag()` metodunu kullanın
+
+## API Tarzı ve İlke Kuralları
+
+### Statik Sınıf Kullanımı
+- `Limelight` sınıfı gibi ortak işlevsellikler için statik sınıfları kullanın
+- Statik sınıflar için tüm metodları ve değişkenleri static olarak tanımlayın
+
+### Enum Kullanımı
+- Sabit değerler için enum'ları kullanın (LEDMode, CameraMode)
+- Her enum değeri için açıklayıcı bir isim ve bir sayısal değer sağlayın
+
+### Sabitleri Gruplandırma
+- İlgili sabitleri anlamlı gruplar halinde düzenleyin
+- Her sabit grubu için açıklayıcı yorumlar ekleyin
+
+## Kesikli Robotlar Dikkate Alınacak Önemli Noktalar
+
+### RobotInit vs. TeleopInit vs. AutonomousInit
+- `robotInit()`: Robotun ilk açıldığında bir kez yapılacak işlemler
+- `teleopInit()`: Her teleop modu başlangıcında yapılacak işlemler
+- `autonomousInit()`: Her otonom mod başlangıcında yapılacak işlemler
+
+### Periyodik Metodlar
+- `robotPeriodic()`: Tüm modlarda sürekli çağrılır
+- `teleopPeriodic()`: Sadece teleop modunda sürekli çağrılır
+- `autonomousPeriodic()`: Sadece otonom modda sürekli çağrılır
+
+### DisabledInit ve DisabledPeriodic
+- `disabledInit()`: Robot devre dışı bırakıldığında güvenlik önlemleri alın
+- LED'leri kapatın, motorları durdurun, titreşimleri devre dışı bırakın
+
+## Kodlama Stili
+
+### Stil Kuralları
+- Blok başlangıçları için süslü parantezleri aynı satırda kullanın: `if (condition) {`
+- Her seviye için 4 boşluk girinti kullanın
+- Metodlar arasında bir boş satır bırakın
+- İlgili kod bloklarını birlikte gruplayın
+
+### Erişim Kontrol
+- Sadece dışarıdan erişilmesi gereken metodları ve alanları public olarak işaretleyin
+- İç yardımcı metodları private olarak işaretleyin
+- Türetilmiş sınıfların erişmesi gereken alanlar için protected kullanın
+
+## Test ve Simülasyon
+
+### Birim Testleri
+- Her alt sistem için JUnit testleri yazın
+- Bağımlılıkları mocklamak için uygun sınıfları tasarlayın
+
+### WPILib Simülasyon
+- Simülatörde kodunuzu test edin
+- Robot davranışını farklı koşullar altında doğrulayın
+- Sensör ve aktuatör değerlerini simüle edin
+
+## Güvenlik Önlemleri
+
+### Motor Güvenliği
+- Motor yönlerini ve limitleri doğru şekilde ayarlayın
+- Kritik sistemler için sıkışma koruması ekleyin
+- Anormal değerleri filtreleyin ve doğrulayın
+
+### Hata İşleme
+- Olası istisnaları öngörün ve düzgünce ele alın
+- Sensör arızaları için geri dönüş davranışları tanımlayın
+- Kritik hataları SmartDashboard'da gösterin
+
+## Performans İyileştirmeleri
+
+### Döngü Optimizasyonu
+- `robotPeriodic()` ve diğer periyodik metodlarda gereksiz iş yapmaktan kaçının
+- Ağır hesaplamaları daha az sıklıkta çalıştırın
+- Yeni nesneleri sürekli oluşturmak yerine mevcut nesneleri yeniden kullanın
+
+### Bellek Kullanımı
+- Gereksiz nesneler oluşturmaktan kaçının
+- Döngüler içinde yeni nesneler oluşturmaktan kaçının

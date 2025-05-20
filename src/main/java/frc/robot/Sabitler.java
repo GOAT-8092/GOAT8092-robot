@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2024 GOAT8092 Robotics Team. All Rights Reserved.
+ *
+ * Open Source Software; you can modify and/or share it under the terms of
+ * the license file in the root directory of this project.
+ */
+ 
 package frc.robot;
 
 // Sabitler ve portlar burada gruplanmıştır.
@@ -5,13 +12,12 @@ public class Sabitler {
 
     // ------------------ Joystick Ayarları ------------------
     // Joystick portu
-    public static final int JOYSTICK_PORT = 1;
-
+    public static final int JOYSTICK_PORT = 0;
 
     // Butonlar (Logitech F310 için)
-    public static final int BUTON_A = 2; // A tuşu
-    public static final int BUTON_B = 3; // B tuşu
-    public static final int BUTON_X = 1; // X tuşu
+    public static final int BUTON_A = 1; // A tuşu
+    public static final int BUTON_B = 2; // B tuşu
+    public static final int BUTON_X = 3; // X tuşu
     public static final int BUTON_Y = 4; // Y tuşu
     public static final int SOL_TAMPON = 5;   // LB (Sol bumper)
     public static final int SAG_TAMPON = 6;   // RB (Sağ bumper)
@@ -19,7 +25,6 @@ public class Sabitler {
     public static final int SAG_ANALOG_TUS = 10; // Sağ analog stick tuşu
     public static final int LT_BUTON = 7; // LT buton portu
     public static final int RT_BUTON = 8; // RT buton portu
-    public static final int START_BUTON = 9; // Start düğmesi
 
     // Analog eksenler (Logitech F310 için)
     public static final int SOL_X_EKSEN = 0;   // Sol analog X (sağ -1, sol 1)
@@ -47,17 +52,34 @@ public class Sabitler {
 
     // ------------------ Hız ve Limitler ------------------
     public static final double MERCAN_HIZ_LIMIT = 0.5;
+    
+    /** Alg toplama hız limiti. */
     public static final double ALG_HIZ_LIMIT = 1.0;
+    
+    /** Alg çalışma süresi (saniye). */
     public static final double ALG_CALISMA_SURESI = 1.0;
+    
+    /** Mercan çalışma süresi (saniye). */
     public static final double MERCAN_CALISMA_SURESI = 2.0;
-    public static final double ASANSOR_OTONOM_YUKSEKLIK = 10.0; 
+    
+    /** Asansör otonom yüksekliği. */
+    public static final double ASANSOR_OTONOM_YUKSEKLIK = 10.0;
+    
+    /** Asansör hızı. */
+    public static final double ASANSOR_HIZI = 0.4;
+  }
 
-    // ------------------ Diğer Sabitler ------------------
-    public static final double OLU_BOLGE = 0.1;
+  /** Görüş ve AprilTag sabitleri. */
+  public static class GorusSabitleri {
+    /** AprilTag hedef mesafesi (metre). */
     public static final double APRIL_TAG_MESAFE = 5.0;
+    
+    /** Otomatik robot hızı. */
     public static final double OTOMATIK_ROBOT_HIZI = 0.5;
+    
+    /** Otomatik dönüş hızı. */
     public static final double OTOMATIK_DONUS_HIZI = 0.02;
-    public static final double ASANSOR_HIZI = 0.6;
+    public static final double ASANSOR_HIZI = 0.4;
     public static final double ASANSOR_YARICAP = 0.675;
     public static final double ASANSOR_MAX_YUKSEKLIK = 250.0;
 }
