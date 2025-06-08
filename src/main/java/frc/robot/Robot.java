@@ -24,8 +24,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 // Studica (NavX/AHRS)
-import com.studica.frc.AHRS;
-import com.studica.frc.AHRS.NavXComType;
+import frc.robot.subsystems.NavXSubsystem;
 
 // OpenCV
 import org.opencv.core.Mat;
@@ -100,8 +99,8 @@ public class Robot extends TimedRobot {
     private double algStartTime = 0.0;
 
     // ---- SENSÖRLER ----
-    /** NavX/AHRS sensörü (IMU - Inertial Measurement Unit). */
-    private AHRS ahrs;
+    /** NavX jiroskop alt sistemi. */
+    private NavXSubsystem navX;
 
     // ---- KONTROL VE GİRİŞ CİHAZLARI ----
     /** Xbox kontrolcüsü. */
@@ -192,7 +191,7 @@ public class Robot extends TimedRobot {
         // ---- SENSÖR BAŞLATMA ----
         // NavX jiroskop sensörünü başlat - robota 3D oryantasyon sağlar
         // MXP_SPI portu üzerinden bağlanır ve daha hızlı iletişim sağlar
-        ahrs = new AHRS(NavXComType.kMXP_SPI);
+        navX = new NavXSubsystem();
 
         // ---- SÜRÜŞ MOTORLARINI BAŞLAT ----
         frontLeft = new PWMVictorSPX(ON_SOL);
@@ -264,9 +263,9 @@ public class Robot extends TimedRobot {
     public void robotPeriodic() {
         // ---- SENSÖR VERİLERİNİ OKU VE GÖSTER ----
         // IMU (NavX) verilerini SmartDashboard'a aktar
-        SmartDashboard.putNumber("Açı", ahrs.getAngle());  // Toplam dönüş açısı
-        SmartDashboard.putNumber("Yaw", ahrs.getYaw());    // Yatay düzlem rotasyonu 
-        SmartDashboard.putNumber("Roll", ahrs.getRoll());  // Robotun yuvarlanma açısı
+        SmartDashboard.putNumber("Açı", navX.getAngle());  // Toplam dönüş açısı
+        SmartDashboard.putNumber("Yaw", navX.getYaw());    // Yatay düzlem rotasyonu
+        SmartDashboard.putNumber("Roll", navX.getRoll());  // Robotun yuvarlanma açısı
         
         // ---- LIMELIGHT VERİLERİNİ GÜNCELLE ----
         // Hedef bilgilerini SmartDashboard'a aktar
