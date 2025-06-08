@@ -233,6 +233,22 @@ Xbox kontrolcüsü, robotun işlevlerini kontrol etmek için kullanılır. İşt
 ### SmartDashboard Etkileşimi
 Kontrolcü ile birlikte, SmartDashboard'daki "Target Tag" açılır menüsünü kullanarak belirli etiket kimliklerini hedefleyebilirsiniz. Bu, A düğmesi ile tepki tetiklendiğinde mevcut görünür etiketlere bakılmaksızın robotun belirli bir etikete tepki vermesini sağlar.
 
+## NavX Sensörü Kullanımı
+
+NavX jiroskopu, robotun yaw, pitch ve roll değerlerini okumak için kullanılır.  
+Sensör `NavXSubsystem` sınıfı ile başlatılır:
+
+```java
+NavXSubsystem navX = new NavXSubsystem();
+```
+
+Temel metodlar:
+
+- `reset()` sensörü sıfırlar.
+- `getYaw()`, `getPitch()`, `getRoll()` güncel açı değerlerini döndürür.
+
+Bu değerler `SmartDashboard` üzerinde `NavX Yaw`, `NavX Pitch` ve `NavX Roll` olarak görüntülenir.
+
 ## Simülasyon ve Test
 
 Robot fiziksel olarak mevcut olmadığında bile geliştirme ve test yapabilmeniz için birkaç seçenek bulunmaktadır:
